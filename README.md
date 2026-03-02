@@ -1,0 +1,1 @@
+just a simple language i came up with at 2am. dont expect much lmao

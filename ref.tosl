@@ -1,0 +1,46 @@
+mod main; // defines a module, other files can attach to this using `attach main;` which means they share a global scope effectively splitting up a single module over multiple files
+
+#[import] std::diagnostic::{nounused, nodeadcode}; // import attributes and automatically apply them
+import self::utils; // self refers to the current module, this always looks from the current module definition root so if this file is in <root>/src it looks for either <root>/src/utils.tosl or <root>/src/utils/mod.rs. if both are found the compiler will warn and always prefer the immediate .tosl file
+
+def fun main(argv: string[]) {
+    println("hello from main");
+
+    let instance = ExampleClass(69); // class and function definitions are usable above its definition in the file, variables in the global scope are not.
+
+    println("got number: "+instance.ExampleField);
+
+    instance.ExampleMethod();
+
+    ExampleClass::ExampleStaticMethod();
+}
+
+
+import std::examples::EmptyBaseClassExample;
+import std::diagnostic::assert::should_panic;
+import std::diagnostic::safety::disable_compile_scope_check;
+
+
+def cls ExampleClass(foo: i32) : EmptyBaseClassExample {
+    const auto ExampleField: i32 = foo; // auto means it uses the compact constructor values instead of fields, which means you can safely have fields and compact constructor args have the same name
+    const ExampleStringField: string?; // no auto means it uses object fields instead, useful when you want to initialize a variable with the return of a static method
+
+    def con(foo: i32, bar: string) { // overloading with compact constructors is supported
+        ExampleField = foo;
+        ExampleStringField = bar;
+    }
+
+    def fun ExampleMethod() {
+        println("hello from an instance method");
+    }
+
+    #[disable_compile_scope_check]
+    def stc ExampleStaticMethod() {
+        println("this is a static method");
+        if let Some(panic_message) = should_panic(println($"this should panic. the value is {ExampleField=}")) {
+            println($"successfully captured panic: {panic_message}");
+        }
+    }
+
+    def get(ExampleField, ExampleStringField); // auto-implement a getter for the specified field/fields
+}

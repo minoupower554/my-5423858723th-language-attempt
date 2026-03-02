@@ -1,0 +1,6 @@
+[package]
+name = "my-5423858723th-language-attempt"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
