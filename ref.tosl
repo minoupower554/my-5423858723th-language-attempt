@@ -1,7 +1,7 @@
 mod main; // defines a module, other files can attach to this using `attach main;` which means they share a global scope effectively splitting up a single module over multiple files
 
 #[import] std::diagnostic::{nounused, nodeadcode}; // import attributes and automatically apply them
-import self::utils; // self refers to the current module, this always looks from the current module definition root so if this file is in <root>/src it looks for either <root>/src/utils.tosl or <root>/src/utils/mod.rs. if both are found the compiler will warn and always prefer the immediate .tosl file
+import self::utils; // self refers to the current module, this always looks from the current module definition root so if this file is in <root>/src it looks for either <root>/src/utils.tosl or <root>/src/utils/mod.tosl. if both are found the compiler will warn and always prefer the immediate .tosl file
 
 def fun main(argv: string[]) {
     println("hello from main");
